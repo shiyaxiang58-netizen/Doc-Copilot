@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Doc Copilot：把 PDF、网页和笔记转化为可理解、可复习、可行动的学习成果。">
+  <title>Doc Copilot · 资料学习助手</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+      <a class="brand" href="#" data-view-link="workspace" aria-label="Doc Copilot 首页">
+        <span class="brand-mark">D</span><span>Doc Copilot</span>
+      </a>
+      <button class="primary-button new-task-button" id="newTaskBtn"><span>＋</span> 新建学习任务</button>
+      <nav class="main-nav" aria-label="主导航">
+        <button class="nav-item active" data-view="workspace"><span class="nav-icon">▤</span>学习工作台</button>
+        <button class="nav-item" data-view="library"><span class="nav-icon">▥</span>我的资料库<span class="nav-badge" id="taskCount">0</span></button>
+        <button class="nav-item" data-view="review"><span class="nav-icon">◷</span>复习中心<span class="nav-badge accent" id="reviewCount">0</span></button>
+      </nav>
+      <section class="recent-section">
+        <div class="section-label">最近处理</div>
+        <div id="recentTasks"></div>
+      </section>
+      <div class="sidebar-footer">
+        <button class="ghost-button reset-button" id="resetDemoBtn">↻ 重置演示数据</button>
+        <div class="profile"><span class="avatar">L</span><span><strong>Lin</strong><small>本地演示空间</small></span><i class="online-dot"></i></div>
+      </div>
+    </aside>
+
+    <main class="main-shell">
+      <header class="topbar">
+        <button class="icon-button mobile-only" id="menuBtn" aria-label="打开菜单">☰</button>
+        <div class="topbar-title"><span class="status-dot"></span><span id="topbarTitle">学习工作台</span><small id="savedState">已保存到本机</small></div>
+        <div class="topbar-actions">
+          <span class="demo-label" id="connectionStatus">正在检查 AI 服务…</span>
+          <button class="secondary-button workspace-action" id="exportBtn">导出学习卡片</button>
+        </div>
+      </header>
+
+      <div class="view active" id="workspaceView">
+        <div class="workspace-layout" id="workspaceLayout">
+          <section class="workspace-main" id="workspaceMain"></section>
+          <aside class="assistant-panel" id="assistantPanel">
+            <div class="panel-header"><div><span class="ai-orb">✦</span><span><strong>资料助手</strong><small><i></i> 基于当前任务回答</small></span></div><button class="icon-button panel-close" id="closeAssistant" aria-label="关闭助手">×</button></div>
+            <div class="chat-body" id="chatBody"></div>
+            <form class="chat-form" id="chatForm">
+              <textarea id="chatInput" rows="1" placeholder="针对这些资料提问…"></textarea>
+              <div><span>Enter 发送</span><button class="send-button" type="submit" aria-label="发送">↑</button></div>
+            </form>
+          </aside>
+          <aside class="source-reader" id="sourceReader" aria-hidden="true"></aside>
+        </div>
+      </div>
+
+      <div class="view" id="libraryView"><section class="page-view" id="libraryContent"></section></div>
+      <div class="view" id="reviewView"><section class="page-view" id="reviewContent"></section></div>
+    </main>
+  </div>
+
+  <button class="floating-ai" id="openAssistant" aria-label="打开资料助手">✦</button>
+
+  <div class="modal-backdrop" id="taskModal" aria-hidden="true">
+    <div class="modal task-modal" role="dialog" aria-modal="true" aria-labelledby="taskModalTitle">
+      <button class="modal-close" data-close-modal="taskModal" aria-label="关闭">×</button>
+      <div class="wizard-heading"><span class="eyebrow">新建学习任务</span><h2 id="taskModalTitle">把看不完的资料，变成学得会的内容</h2><p>资料将发送到你配置的 AI 服务；浏览器会保存分析结果和必要的引用片段。</p></div>
+      <div class="stepper"><span class="active" data-step-dot="1">1 <b>任务信息</b></span><i></i><span data-step-dot="2">2 <b>添加资料</b></span><i></i><span data-step-dot="3">3 <b>确认分析</b></span></div>
+      <div id="wizardBody"></div>
+      <div class="modal-actions"><button class="secondary-button" id="wizardBack">上一步</button><button class="primary-button" id="wizardNext">继续</button></div>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" id="regenerateModal" aria-hidden="true">
+    <div class="modal compact-modal" role="dialog" aria-modal="true" aria-labelledby="regenTitle">
+      <button class="modal-close" data-close-modal="regenerateModal" aria-label="关闭">×</button>
+      <span class="modal-icon">✦</span><h2 id="regenTitle">这次想怎么重新整理？</h2><p>选择一个侧重点，助手会给出另一版总结。</p>
+      <div class="preference-grid">
+        <button data-regen="concise"><b>更简短</b><small>只保留必须记住的核心结论</small></button>
+        <button data-regen="detailed"><b>更详细</b><small>补充解释、背景和关键依据</small></button>
+        <button data-regen="practical"><b>更实用</b><small>强调可以立刻执行的方法</small></button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" id="exportModal" aria-hidden="true">
+    <div class="modal export-modal" role="dialog" aria-modal="true" aria-labelledby="exportTitle">
+      <button class="modal-close" data-close-modal="exportModal" aria-label="关闭">×</button>
+      <div class="export-heading"><span class="eyebrow">学习卡片预览</span><h2 id="exportTitle">把重点带走，随时复习</h2></div>
+      <div class="learning-card" id="learningCard"></div>
+      <div class="modal-actions"><button class="secondary-button" data-close-modal="exportModal">返回</button><button class="primary-button" id="copyCardBtn">复制卡片内容</button></div>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" id="confirmResetModal" aria-hidden="true">
+    <div class="modal compact-modal confirm-modal" role="dialog" aria-modal="true" aria-labelledby="resetTitle">
+      <span class="modal-icon warning">↻</span><h2 id="resetTitle">重置演示数据？</h2><p>任务、答题和行动进度会恢复为初始样例，不会删除任何项目文件。</p>
+      <div class="modal-actions"><button class="secondary-button" data-close-modal="confirmResetModal">取消</button><button class="danger-button" id="confirmResetBtn">确认重置</button></div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" role="status"></div>
+  <script src="app.js"></script>
+</body>
+</html>

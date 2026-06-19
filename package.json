@@ -1,0 +1,16 @@
+{
+  "name": "doc-copilot",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "engines": { "node": ">=20" },
+  "description": "真实可用的网页资料分析与学习助手",
+  "scripts": {
+    "start": "node server.mjs",
+    "dev": "node --watch server.mjs",
+    "check": "node --check server.mjs && node --check app.js"
+  },
+  "dependencies": {
+    "pdfjs-dist": "^5.4.296"
+  }
+}
