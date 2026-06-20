@@ -138,7 +138,7 @@ async function extractWeb(url) {
   try {
     let response;
     for (let redirects = 0; redirects <= 4; redirects += 1) {
-      response = await fetch(parsed, { signal: controller.signal, headers: { 'User-Agent': 'DocCopilot/1.0' }, redirect: 'manual' });
+      response = await fetch(parsed, { signal: controller.signal, headers: { 'User-Agent': 'FileProcessingAssistant/1.0' }, redirect: 'manual' });
       if (![301, 302, 303, 307, 308].includes(response.status)) break;
       const location = response.headers.get('location');
       if (!location) throw new HttpError(422, '网页跳转地址无效。');
@@ -227,7 +227,7 @@ function parseAIJson(text) {
   }
 }
 
-const analysisSystemPrompt = `你是 Doc Copilot，一名严谨的中文资料分析助手。你的任务是把多份资料变成可理解、可复习、可行动的学习成果。
+const analysisSystemPrompt = `你是 File Processing Assistant，一名严谨的中文资料分析助手。你的任务是把多份资料变成可理解、可复习、可行动的学习成果。
 只依据提供的资料，不编造事实。引用 quote 必须尽量逐字来自对应资料。输出严格 JSON，不要 Markdown。
 JSON 结构：
 {
@@ -376,6 +376,6 @@ const server = createServer(async (req, res) => {
 export { server };
 
 server.listen(PORT, HOST, () => {
-  console.log(`Doc Copilot 已启动：http://${HOST === '0.0.0.0' ? 'localhost' : HOST}:${PORT}`);
+  console.log(`File Processing Assistant 已启动：http://${HOST === '0.0.0.0' ? 'localhost' : HOST}:${PORT}`);
   console.log(AI_API_KEY && AI_MODEL ? `AI 已配置：${AI_MODEL}` : 'AI 尚未配置：请复制 .env.example 为 .env 并填写密钥和模型。');
 });

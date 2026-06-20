@@ -11,7 +11,7 @@
   --green: #35a875;
   --red: #d65e5a;
   --orange: #df984c;
-  --sidebar: 244px;
+  --sidebar: 264px;
   --assistant: 318px;
   font-family: "DM Sans", "Noto Sans SC", system-ui, sans-serif;
   color: var(--ink);
@@ -28,7 +28,7 @@ button:focus-visible, input:focus-visible, textarea:focus-visible { outline: 3px
 
 .app-shell { min-height: 100vh; }
 .sidebar { position: fixed; inset: 0 auto 0 0; z-index: 30; display: flex; flex-direction: column; width: var(--sidebar); padding: 24px 15px 16px; border-right: 1px solid var(--line); background: #fdfdfe; }
-.brand { display: flex; align-items: center; gap: 10px; padding: 0 9px 23px; color: var(--ink); font-size: 16px; font-weight: 700; text-decoration: none; }
+.brand { display: flex; align-items: center; gap: 10px; padding: 0 9px 23px; color: var(--ink); font-size: 14px; font-weight: 700; line-height: 1.2; text-decoration: none; }
 .brand-mark { display: grid; width: 31px; height: 31px; place-items: center; border-radius: 9px; color: #fff; background: linear-gradient(145deg, #816cef, #4e34bf); box-shadow: 0 6px 18px #6650d344; font-size: 13px; }
 .primary-button, .secondary-button, .danger-button, .ghost-button { border-radius: 8px; padding: 10px 14px; border: 0; font-size: 12px; font-weight: 600; transition: .2s ease; }
 .primary-button { color: #fff; background: var(--purple); box-shadow: 0 5px 14px #6750d82b; }

@@ -21,6 +21,6 @@ if (-not (Test-Path -LiteralPath '.env')) {
   Write-Host '服务仍会启动，但真实分析会提示尚未配置 AI。'
 }
 
-Write-Host '正在启动 Doc Copilot…' -ForegroundColor Cyan
+Write-Host '正在启动 File Processing Assistant…' -ForegroundColor Cyan
 Write-Host '启动后请访问 http://127.0.0.1:3000'
 & $node 'server.mjs'

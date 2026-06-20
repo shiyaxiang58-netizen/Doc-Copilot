@@ -1,4 +1,4 @@
-# Doc Copilot
+# File Processing Assistant
 
 一个面向学生、实习生和职场新人的真实资料学习助手。它可以读取 PDF、网页和文本笔记，通过你配置的 AI 服务生成总结、重点、问答、行动建议和原文引用。
 

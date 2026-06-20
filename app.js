@@ -137,7 +137,7 @@ async function requestApi(path, body) {
       body: body ? JSON.stringify(body) : undefined
     });
   } catch (_) {
-    throw new Error('无法连接 Doc Copilot 服务。请通过 http://localhost:3000 打开网页，并确认服务已启动。');
+    throw new Error('无法连接 File Processing Assistant 服务。请通过 http://localhost:3000 打开网页，并确认服务已启动。');
   }
   let payload = {};
   try { payload = await response.json(); } catch (_) { /* handled below */ }
@@ -557,7 +557,7 @@ function failAnalysis(task, error) {
 function buildLearningCard() {
   const task = currentTask();
   const summary = task.analysis.summaryVersions[task.analysis.activeVersion];
-  $('#learningCard').innerHTML = `<div class="learning-card-brand"><span>✦ Doc Copilot</span><small>学习卡片</small></div><h2>${escapeHTML(task.title)}</h2><p>${escapeHTML(summary)}</p><div class="card-divider"></div><ol>${task.analysis.points.slice(0, 3).map((point) => `<li><span>0${task.analysis.points.indexOf(point) + 1}</span><strong>${point.title}</strong></li>`).join('')}</ol><div class="card-footer"><span>${task.sources.length} 份资料综合整理</span><span>仅供学习参考</span></div>`;
+  $('#learningCard').innerHTML = `<div class="learning-card-brand"><span>✦ File Processing Assistant</span><small>学习卡片</small></div><h2>${escapeHTML(task.title)}</h2><p>${escapeHTML(summary)}</p><div class="card-divider"></div><ol>${task.analysis.points.slice(0, 3).map((point) => `<li><span>0${task.analysis.points.indexOf(point) + 1}</span><strong>${point.title}</strong></li>`).join('')}</ol><div class="card-footer"><span>${task.sources.length} 份资料综合整理</span><span>仅供学习参考</span></div>`;
 }
 
 function copyText(text, success) {
