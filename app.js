@@ -67,10 +67,163 @@ function createAnalysis() {
   };
 }
 
+const SAMPLE_FULL_TEXTS = {
+  pdf: {
+    subtitle: '演示资料 · 模拟 24 页完整内容',
+    sections: [
+      {
+        id: 'pdf-section-1', label: 'P.01–03', title: '导言：从模型展示走向真实产品',
+        paragraphs: [
+          '生成式 AI 带来了新的内容生产方式，但“模型能够生成什么”并不等于“用户愿意为什么持续使用”。一个可落地的 AI 产品，需要把模型能力放进具体任务、工作流程与责任边界中重新审视。',
+          '本指南将产品设计过程拆分为机会识别、体验设计、系统构建和持续评测四个部分。它们并不是一次性完成的线性步骤，而是需要在用户反馈中不断往返验证的循环。',
+          '阅读时建议始终带着一个问题：如果移除 AI，这个任务原本最费力的环节是什么？只有这个问题足够清楚，团队才有可能判断 AI 是否真正降低了成本。'
+        ]
+      },
+      {
+        id: 'pdf-section-2', label: 'P.04–06', title: '机会识别：先理解用户任务',
+        paragraphs: [
+          '判断一个 AI 产品机会时，不应先罗列模型可以完成的能力。技术能力只有与真实、高频且高摩擦的用户任务匹配，才能转化为稳定的产品价值。团队应先观察任务，再选择合适的技术路径。',
+          '可以从三个维度判断任务是否值得进入产品：它是否频繁发生、是否需要大量重复劳动、结果是否能够被用户快速检查。高频但无法验证的任务，往往会把节省的时间转化为新的检查成本。',
+          '早期验证不需要完整系统。选择十个真实案例，记录用户原有完成时间、AI 辅助后的完成时间以及最终采纳情况，通常比一次大规模功能发布更能说明问题。'
+        ]
+      },
+      {
+        id: 'pdf-section-3', label: 'P.07–10', title: '体验设计：让不确定性变得可控',
+        paragraphs: [
+          '生成结果具有概率性，同一个输入可能得到不同答案。产品不应隐藏这种差异，而应帮助用户理解结果的来源、适用范围和可能遗漏的内容。',
+          '来源引用、结果编辑、重新生成和人工确认是四个基础入口。来源引用帮助核对事实，结果编辑保留用户判断，重新生成提供探索空间，人工确认则保护高风险步骤。',
+          '对于重要操作，可以采用“建议—预览—确认—执行”的渐进式流程。用户先看到系统准备做什么，再决定是否继续，从而在效率和控制感之间取得平衡。'
+        ]
+      },
+      {
+        id: 'pdf-section-4', label: 'P.11–13', title: '协作闭环：让反馈进入下一次生成',
+        paragraphs: [
+          '一次正确回答并不会自然形成长期价值。用户会修改语气、删减内容、补充背景，这些行为都是比点赞更具体的反馈。',
+          '产品可以记录用户主动确认的偏好，例如常用格式、术语选择和输出长度，并在下一次任务开始前明确展示“本次将应用哪些偏好”。',
+          '反馈闭环应允许用户查看和撤销。只有当记忆透明、可修改时，个性化才不会变成无法解释的黑箱。'
+        ]
+      },
+      {
+        id: 'pdf-section-5', label: 'P.14–16', title: '系统构建：检索、生成与工具调用',
+        paragraphs: [
+          '当任务依赖私有资料时，系统可以先检索相关内容，再让模型基于检索结果生成答案。这个过程通常被称为 RAG，即检索增强生成。',
+          '检索质量决定模型看到了什么，提示词决定模型如何使用这些内容。团队需要分别测试召回是否完整、引用是否准确以及回答是否忠于资料。',
+          '工具调用进一步扩展了系统能力，但每增加一个工具，也增加了一类失败方式。权限、超时、重复执行和异常恢复都应在产品流程中被明确处理。'
+        ]
+      },
+      {
+        id: 'pdf-section-6', label: 'P.17–19', title: '效果评测：模型分数之外的指标',
+        paragraphs: [
+          '模型分数不能代表完整的产品体验。评测需要同时覆盖准确性、任务完成率、响应速度和用户采纳率。这些指标共同反映结果是否真正进入用户工作流。',
+          '离线评测适合快速比较不同方案，在线评测用于观察真实行为。两者需要共享一套典型案例，否则团队可能得到彼此矛盾的结论。',
+          '错误也应分类记录：事实错误、遗漏、格式错误、拒答不当和工具执行失败需要不同的修复方式。只看平均分会掩盖少量但严重的问题。'
+        ]
+      },
+      {
+        id: 'pdf-section-7', label: 'P.20–22', title: 'Agent 工作流：从回答走向行动',
+        paragraphs: [
+          'Agent 将产品从回答问题推向完成任务。它需要理解目标、拆解步骤、选择工具，并根据执行结果继续调整计划。',
+          '每一个自动执行步骤都应该可观察、可暂停，并允许用户接管。行动能力与控制能力必须一起设计。对于发送、支付、删除和公开发布等操作，应设置更明确的确认边界。',
+          '一个稳妥的起点，是先让 Agent 生成计划和草稿，由用户确认后再执行。随着成功案例积累，再逐步扩大自动化范围。'
+        ]
+      },
+      {
+        id: 'pdf-section-8', label: 'P.23–24', title: '落地清单与结语',
+        paragraphs: [
+          '落地前可以检查五件事：目标任务是否明确、结果是否可验证、用户是否能够修改、关键行动是否需要确认、失败后是否能够恢复。',
+          '生成式 AI 产品不是一次模型接入，而是一套持续学习的协作系统。真正的竞争力来自对用户任务的理解、对失败边界的管理，以及把反馈转化为下一轮产品改进的速度。',
+          '建议从一个窄而清晰的任务开始，用真实案例建立评测集，在小范围用户中验证价值，再决定是否扩大功能和自动化程度。'
+        ]
+      }
+    ]
+  },
+  web: {
+    subtitle: '演示网页 · 模拟文章全文',
+    sections: [
+      {
+        id: 'web-section-1', label: '01', title: '信任不是一句“由 AI 生成”',
+        paragraphs: [
+          '用户不会因为模型更复杂就自然信任结果。信任来自一系列可以被感知的产品细节：系统是否说明依据、是否允许修改、是否在重要步骤前征求确认。',
+          '如果界面只给出一个看起来确定的答案，用户要么过度依赖，要么完全拒绝。更好的做法是把核对和修正设计成正常流程的一部分。'
+        ]
+      },
+      {
+        id: 'web-section-2', label: '02', title: '模式一：显示来源依据',
+        paragraphs: [
+          '来源依据帮助用户从“相信系统”转向“检查信息”。引用应尽量定位到具体页码、段落或数据记录，而不是只列出一个笼统的文件名称。',
+          '引用入口需要与结论保持接近。用户点击后应看到高亮原句和必要上下文，并能够快速返回当前阅读位置。'
+        ]
+      },
+      {
+        id: 'web-section-3', label: '03', title: '模式二：让结果可以编辑',
+        paragraphs: [
+          '可编辑不是一个附加功能，而是人机协作的核心接口。用户通过删除、补充和改写，将自己的判断加入生成结果。',
+          '产品还可以区分 AI 原始内容和用户修改内容，避免后续协作时无法判断责任来源。对于团队场景，保留版本历史尤其重要。'
+        ]
+      },
+      {
+        id: 'web-section-4', label: '04', title: '模式三：在关键节点确认',
+        paragraphs: [
+          '来源依据、结果可编辑性和关键节点确认，是建立信任的三个基础入口。产品需要让不确定性可见，而不是假装它不存在。',
+          '确认不应该出现在每一步，否则用户会形成机械点击。它更适合不可逆、影响他人或涉及隐私的操作，例如发送邮件、发布内容和修改共享文件。'
+        ]
+      },
+      {
+        id: 'web-section-5', label: '05', title: '把可信交互变成系统能力',
+        paragraphs: [
+          '可信体验不能只依赖一句提示语。团队需要在数据、模型、界面和运营流程中共同定义：什么可以自动完成，什么必须说明依据，什么需要用户接管。',
+          '评测时除了判断答案是否正确，也要观察用户能否发现错误、完成核对并理解下一步。一个允许用户有效纠错的系统，比一个偶尔表现完美但无法解释的系统更可靠。'
+        ]
+      }
+    ]
+  },
+  text: {
+    subtitle: '演示笔记 · 模拟访谈整理全文',
+    sections: [
+      {
+        id: 'note-section-1', label: '背景', title: '访谈目标与参与者',
+        paragraphs: [
+          '本轮访谈希望了解初次使用 AI 助手的人如何判断结果质量，以及什么因素会让他们愿意把助手放进日常工作。共访谈六位参与者，包括两名学生、两名实习生和两名工作三年以内的职场新人。',
+          '访谈采用任务观察与半结构化提问结合的方式。参与者先使用助手完成资料总结，再回顾自己在哪些位置停顿、修改或查找原文。'
+        ]
+      },
+      {
+        id: 'note-section-2', label: '发现 01', title: '速度带来第一次使用，核对成本决定第二次使用',
+        paragraphs: [
+          '所有参与者都认可初稿生成速度，但其中四人表示，如果需要逐句回到原文检查，节省的时间会明显减少。',
+          '参与者更喜欢可以直接跳转到出处的总结。一名实习生提到：“我不是要求它永远正确，我需要知道哪里值得我再看一眼。”'
+        ]
+      },
+      {
+        id: 'note-section-3', label: '发现 02', title: '用户会主动调整第一次输出',
+        paragraphs: [
+          '多数受访者会对第一次输出进行调整。常见修改包括缩短段落、替换专业词、增加具体例子，以及删除他们认为重复的结论。',
+          '这些修改不是对系统的拒绝，而是用户把通用结果变成个人成果的过程。相比只提供“重新生成”，参与者更希望能够保留满意部分，只修改其中一段。'
+        ]
+      },
+      {
+        id: 'note-section-4', label: '发现 03', title: '反馈闭环决定协作感',
+        paragraphs: [
+          '当助手能记住修改方式并在下一次主动应用时，用户才感到它真正参与了协作。反馈不应只停留在点赞和点踩。',
+          '不过，参与者也担心助手错误记忆偏好。他们希望看到系统记住了什么，并可以随时关闭或删除某一条偏好。'
+        ]
+      },
+      {
+        id: 'note-section-5', label: '结论', title: '产品机会与下一步验证',
+        paragraphs: [
+          '下一版应优先验证三个方向：为每条重点提供原文定位、允许局部编辑而不是全部重新生成、把用户确认过的修改转化为透明的偏好设置。',
+          '后续测试将记录完成时间、引用点击次数、修改比例和最终采纳率，并观察用户是否愿意在一周内主动再次使用。'
+        ]
+      }
+    ]
+  }
+};
+
 function createSources() {
   return [
     {
       id: 'source-pdf', type: 'pdf', name: '生成式 AI 产品设计指南.pdf', meta: '24 页 · 3.8 MB',
+      fullText: deepCopy(SAMPLE_FULL_TEXTS.pdf),
       snippets: [
         { id: 'pdf-05', location: '第 5 页 · 用户任务分析', before: '判断一个 AI 产品机会时，不应先罗列模型可以完成的能力。', highlight: '技术能力只有与真实、高频且高摩擦的用户任务匹配，才能转化为稳定的产品价值。', after: '团队应先观察任务，再选择合适的技术路径。' },
         { id: 'pdf-17', location: '第 17 页 · 产品评测体系', before: '模型分数不能代表完整的产品体验。', highlight: '评测需要同时覆盖准确性、任务完成率、响应速度和用户采纳率。', after: '这些指标共同反映结果是否真正进入用户工作流。' },
@@ -79,10 +232,12 @@ function createSources() {
     },
     {
       id: 'source-web', type: 'web', name: '可信 AI 交互设计模式', meta: 'example.com/design/trust',
+      fullText: deepCopy(SAMPLE_FULL_TEXTS.web),
       snippets: [{ id: 'web-trust', location: '网页段落 8 · 可信交互', before: '用户不会因为模型更复杂就自然信任结果。', highlight: '来源依据、结果可编辑性和关键节点确认，是建立信任的三个基础入口。', after: '产品需要让不确定性可见，而不是假装它不存在。' }]
     },
     {
       id: 'source-note', type: 'text', name: '访谈笔记：AI 助手使用反馈', meta: '1,286 字 · 个人笔记',
+      fullText: deepCopy(SAMPLE_FULL_TEXTS.text),
       snippets: [{ id: 'note-loop', location: '笔记段落 4 · 反馈闭环', before: '多数受访者会对第一次输出进行调整。', highlight: '当助手能记住修改方式并在下一次主动应用时，用户才感到它真正参与了协作。', after: '反馈不应只停留在点赞和点踩。' }]
     }
   ];
@@ -109,13 +264,25 @@ function loadState() {
   try {
     const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
     if (saved?.tasks?.length) {
+      const sampleSources = createSources();
+      let migrated = false;
       saved.tasks.forEach((task) => {
         task.chatPending = false;
+        if (!task.realAnalysis) {
+          task.sources?.forEach((source) => {
+            const sample = sampleSources.find((item) => item.id === source.id || item.name === source.name);
+            if (sample?.fullText && !source.fullText) {
+              source.fullText = deepCopy(sample.fullText);
+              migrated = true;
+            }
+          });
+        }
         if (task.status === 'analyzing') {
           task.status = 'error';
           task.errorMessage = '上次分析被中断，请重新创建任务并上传资料。';
         }
       });
+      if (migrated) localStorage.setItem(STORAGE_KEY, JSON.stringify(saved));
       return saved;
     }
   } catch (_) { /* Fall back to seed data. */ }
@@ -244,7 +411,7 @@ function renderWorkspace() {
     <section class="document-hero">
       <div class="hero-status"><span>✦ ${task.realAnalysis ? 'AI 已完成真实分析' : '示例分析结果'}</span><i></i><span>${task.sources.length} 份资料交叉整理</span></div>
       <h1>${escapeHTML(task.title)}</h1><p>${escapeHTML(task.description)}</p>
-      <div class="source-pills">${task.sources.map((source) => `<button data-open-source="${source.id}"><span class="mini-file ${source.type}">${sourceIcon(source.type)}</span>${escapeHTML(source.name)}<small>${escapeHTML(source.meta)}</small></button>`).join('')}</div>
+      <div class="source-pills">${task.sources.map((source) => `<button data-open-source="${source.id}"><span class="mini-file ${source.type}">${sourceIcon(source.type)}</span><span class="source-pill-copy">${escapeHTML(source.name)}<small>${escapeHTML(source.meta)}</small></span>${source.fullText ? '<b>阅读全文 →</b>' : ''}</button>`).join('')}</div>
     </section>
     <div class="tabs" role="tablist">${tabs.map(([id, label]) => `<button class="tab ${task.activeTab === id ? 'active' : ''}" data-tab="${id}">${label}</button>`).join('')}</div>
     <div class="tab-content">${renderTab(task)}</div>`;
@@ -420,11 +587,39 @@ function openSource(sourceId, snippetId) {
   const source = task?.sources.find((item) => item.id === sourceId);
   if (!source) return;
   const snippet = source.snippets.find((item) => item.id === snippetId) || source.snippets[0];
-  currentCitation = { sourceId, snippetId: snippet.id };
+  if (!snippet) return;
+  currentCitation = { sourceId, snippetId: snippet.id, mode: 'citation' };
   $('#sourceReader').innerHTML = `
-    <div class="reader-header"><div><span class="eyebrow">原文依据</span><strong>${escapeHTML(source.name)}</strong></div><button class="icon-button" id="closeReader" aria-label="关闭原文">×</button></div>
+    <div class="reader-header"><div><span class="eyebrow">原文依据</span><strong>${escapeHTML(source.name)}</strong></div><div class="reader-header-actions">${source.fullText ? `<button class="secondary-button small" data-full-source="${source.id}">阅读全文</button>` : ''}<button class="icon-button" id="closeReader" aria-label="关闭原文">×</button></div></div>
     <div class="reader-tabs">${source.snippets.map((item, index) => `<button class="${item.id === snippet.id ? 'active' : ''}" data-citation="${source.id}|${item.id}">${String(index + 1).padStart(2, '0')}</button>`).join('')}</div>
     <div class="reader-document"><div class="reader-meta"><span class="mini-file ${source.type}">${sourceIcon(source.type)}</span><span><strong>${escapeHTML(snippet.location)}</strong><small>${escapeHTML(source.meta)}</small></span></div><p>${escapeHTML(snippet.before)}</p><mark>${escapeHTML(snippet.highlight)}</mark><p>${escapeHTML(snippet.after)}</p><div class="reader-context"><span>上下文</span><i></i><small>已高亮支持当前结论的原句</small></div></div>`;
+  showSourceReader();
+}
+
+function openFullSource(sourceId) {
+  const task = currentTask();
+  const source = task?.sources.find((item) => item.id === sourceId);
+  if (!source?.fullText?.sections?.length) {
+    openSource(sourceId);
+    return;
+  }
+  const previousSnippet = currentCitation?.sourceId === sourceId ? currentCitation.snippetId : source.snippets?.[0]?.id;
+  currentCitation = { sourceId, snippetId: previousSnippet, mode: 'full' };
+  $('#sourceReader').innerHTML = `
+    <div class="reader-header"><div><span class="eyebrow">模拟全文</span><strong>${escapeHTML(source.name)}</strong></div><div class="reader-header-actions">${previousSnippet ? `<button class="secondary-button small" data-back-citation="${source.id}|${previousSnippet}">查看引用</button>` : ''}<button class="icon-button" id="closeReader" aria-label="关闭全文">×</button></div></div>
+    <div class="full-reader-body">
+      <div class="full-reader-hero">
+        <span class="file-icon ${source.type}">${sourceIcon(source.type)}</span>
+        <div><span class="simulation-badge">仅供产品演示 · 非真实出版资料</span><h2>${escapeHTML(source.name)}</h2><p>${escapeHTML(source.fullText.subtitle)}</p></div>
+      </div>
+      <nav class="full-reader-nav" aria-label="全文目录">${source.fullText.sections.map((section) => `<button data-reader-section="${section.id}"><span>${escapeHTML(section.label)}</span>${escapeHTML(section.title)}</button>`).join('')}</nav>
+      <article class="full-document">${source.fullText.sections.map((section) => `<section id="${section.id}"><span>${escapeHTML(section.label)}</span><h3>${escapeHTML(section.title)}</h3>${section.paragraphs.map((paragraph) => `<p>${escapeHTML(paragraph)}</p>`).join('')}</section>`).join('')}</article>
+      <div class="full-reader-end"><span>✦</span><strong>模拟资料正文结束</strong><small>本内容为 File Processing Assistant 产品演示而创作</small></div>
+    </div>`;
+  showSourceReader();
+}
+
+function showSourceReader() {
   $('#sourceReader').classList.add('open');
   $('#sourceReader').setAttribute('aria-hidden', 'false');
   $('#workspaceLayout').classList.add('reader-open');
@@ -607,7 +802,10 @@ document.addEventListener('click', async (event) => {
   if (target.dataset.removeWizardSource) { wizard.sources = wizard.sources.filter((source) => source.id !== target.dataset.removeWizardSource); renderWizard(); }
   if (target.dataset.tab) { const task = currentTask(); task.activeTab = target.dataset.tab; saveState(); renderWorkspace(); }
   if (target.dataset.citation) { const [sourceId, snippetId] = target.dataset.citation.split('|'); openSource(sourceId, snippetId); }
-  if (target.dataset.openSource) openSource(target.dataset.openSource);
+  if (target.dataset.openSource) openFullSource(target.dataset.openSource);
+  if (target.dataset.fullSource) openFullSource(target.dataset.fullSource);
+  if (target.dataset.backCitation) { const [sourceId, snippetId] = target.dataset.backCitation.split('|'); openSource(sourceId, snippetId); }
+  if (target.dataset.readerSection) document.getElementById(target.dataset.readerSection)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   if (target.id === 'closeReader') closeReader();
   if (target.dataset.copySummary !== undefined) copyText(currentTask().analysis.summaryVersions[currentTask().analysis.activeVersion], '总结已复制');
   if (target.id === 'regenerateBtn') openModal('regenerateModal');
