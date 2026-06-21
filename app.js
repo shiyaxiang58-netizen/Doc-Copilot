@@ -553,6 +553,17 @@ function renderAssistant() {
   $('#chatBody').scrollTop = $('#chatBody').scrollHeight;
 }
 
+function setAssistantPanel(open) {
+  const panel = $('#assistantPanel');
+  const trigger = $('#openAssistant');
+  panel.classList.toggle('collapsed', !open);
+  panel.classList.toggle('open', open);
+  $('#workspaceLayout').classList.toggle('assistant-collapsed', !open);
+  trigger.classList.toggle('show', !open);
+  trigger.classList.toggle('panel-open', open);
+  trigger.setAttribute('aria-expanded', String(open));
+}
+
 async function sendChat(text) {
   const task = currentTask();
   if (!text.trim() || !task || task.chatPending) return;
@@ -868,8 +879,8 @@ document.addEventListener('click', async (event) => {
   if (target.id === 'resetDemoBtn') openModal('confirmResetModal');
   if (target.id === 'confirmResetBtn') { state = initialState(); localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); closeModal('confirmResetModal'); closeReader(); renderApp(); renderAssistant(); toast('演示数据已重置'); }
   if (target.id === 'menuBtn') $('#sidebar').classList.toggle('open');
-  if (target.id === 'openAssistant') $('#assistantPanel').classList.add('open');
-  if (target.id === 'closeAssistant') $('#assistantPanel').classList.remove('open');
+  if (target.id === 'openAssistant') setAssistantPanel(true);
+  if (target.id === 'closeAssistant') setAssistantPanel(false);
 });
 
 document.addEventListener('change', (event) => {
@@ -898,7 +909,7 @@ $('#chatInput').addEventListener('keydown', (event) => {
 
 $$('.modal-backdrop').forEach((backdrop) => backdrop.addEventListener('click', (event) => { if (event.target === backdrop) closeModal(backdrop.id); }));
 document.addEventListener('keydown', (event) => {
-  if (event.key === 'Escape') { $$('.modal-backdrop.open').forEach((modal) => closeModal(modal.id)); closeReader(); $('#assistantPanel').classList.remove('open'); $('#sidebar').classList.remove('open'); }
+  if (event.key === 'Escape') { $$('.modal-backdrop.open').forEach((modal) => closeModal(modal.id)); closeReader(); setAssistantPanel(false); $('#sidebar').classList.remove('open'); }
 });
 
 renderApp();
